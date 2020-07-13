@@ -2,6 +2,7 @@ const express = require('express');
 const dotenv = require('dotenv');
 const morgan = require('morgan');
 const colors = require('colors');
+require('express-async-errors');
 
 // Loading environment variables
 dotenv.config({ path: './config/config.env' });
