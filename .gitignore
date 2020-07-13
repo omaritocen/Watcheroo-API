@@ -1,1 +1,5 @@
 node_modules/
+config/config.env
+logger/combined.log
+logger/error.log
+logger/exceptions.log
