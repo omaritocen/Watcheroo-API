@@ -1,0 +1,14 @@
+{
+  "name": "watcheroo-api",
+  "version": "1.0.0",
+  "description": "API for the Watcheroo application",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Omar Alaa",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
