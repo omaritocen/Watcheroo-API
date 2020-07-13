@@ -3,15 +3,11 @@ const logger = require('./logger/logger');
 
 const app = express();
 
-app.get('/', (req, res, next) => {
-  res.json({
-    success: true,
-    result: 'Hello World',
-  });
-});
+// Loading essential configuaration for the API
 
 require('./startup/config');
 require('./startup/db');
+require('./startup/routes')(app);
 
 const port = process.env.PORT || 5000;
 
