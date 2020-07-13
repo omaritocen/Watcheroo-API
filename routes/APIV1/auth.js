@@ -1,12 +1,9 @@
 const express = require('express');
-
 const router = express.Router();
 
-router.get('/', (req, res, next) => {
-    res.json({
-        sucess: true,
-        body: 'Main Page now',
-    });
-});
+const { signUp } = require('../../controller/authController');
+const validBody = require('../../middleware/validBody');
+
+router.post('/signup', validBody('createUser'), signUp);
 
 module.exports = router;

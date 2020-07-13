@@ -5,7 +5,7 @@ const app = express();
 
 // Loading essential configuaration for the API
 
-require('./startup/config');
+require('./startup/config')(app);
 require('./startup/db');
 require('./startup/routes')(app);
 
