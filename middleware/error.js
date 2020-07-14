@@ -2,6 +2,7 @@ const AppError = require('../utils/AppError');
 
 module.exports = (err, req, res, next) => {
     let error = { ...err };
+    error.message = err.message;
 
     // Mongoose duplicate keys
     if (err.code === 11000) {

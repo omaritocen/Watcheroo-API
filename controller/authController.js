@@ -23,8 +23,9 @@ module.exports.signUp = async (req, res, next) => {
 //  @access Public
 //  @param  Email Password
 module.exports.login = async (req, res, next) => {
-
-    const user = await User.findOne({ email: req.body.email }).select('+password');
+    const user = await User.findOne({ email: req.body.email }).select(
+        '+password'
+    );
     if (!user) {
         return next(new AppError('Invalid Credntials', 400));
     }
@@ -37,13 +38,22 @@ module.exports.login = async (req, res, next) => {
     sendTokenResponse(user, res);
 };
 
+//  @desc   gets the data of the current logged in user
+//  @route  GET /api/v1/auth/me
+//  @access Private
+module.exports.getMe = async (req, res, next) => {
+    res.status(200).json({ success: true, data: req.user });
+};
+
 const sendTokenResponse = async (user, res) => {
     const token = await user.generateAuthToken();
 
     res.status(200).json({
         success: true,
         data: {
-            'token': token
-        }
+            token: token,
+            expiryDate: Date.now() + 30 * 24 * 60 * 60 * 1000,
+            _userId: user._id,
+        },
     });
-}
+};
