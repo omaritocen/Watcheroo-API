@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
-const maxUsernameLength = 20;
+const randomUsernameGenerator = require('../utils/randomUsernameGenerator');
+
 const profileSchema = new mongoose.Schema({
     _userId: {
         required: true,
@@ -20,13 +21,17 @@ const profileSchema = new mongoose.Schema({
         required: [true, 'Last Name Must be provided.'],
     },
 
-    // username: {
-    //     type: String,
-    //     minlength: 6,
-    //     maxlength: maxUsernameLength,
-    //     unique: [true, 'Users must have unique usernames'],
-    //     required: [true, 'Username must be provided'],
-    // },
+    username: {
+        type: String,
+        minlength: 6,
+        maxlength: process.env.MAX_USERNAME_LENGTH,
+        unique: [true, 'Users must have unique usernames'],
+        required: [true, 'Username must be provided'],
+        match: [
+            /^[a-zA-Z0-9_-]*$/,
+            'Usernames can only contain numbers, letters, dashes and underscores',
+        ],
+    },
 
     photo: {
         type: String,
@@ -41,11 +46,13 @@ const profileSchema = new mongoose.Schema({
     ],
 });
 
-// profileSchema.pre('save', function() {
-//     const fullName = `${this.firstName}${this.lastName}`;
-
-//     this.username = maxUsernameLength - fullName.length;
-// });
+// Creates a random username before inserting into database
+profileSchema.pre('validate', async function () {
+    this.username = await randomUsernameGenerator(
+        this.firstName,
+        this.lastName
+    );
+});
 
 const Profile = mongoose.model('Profile', profileSchema);
 
