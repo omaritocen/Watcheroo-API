@@ -6,7 +6,7 @@ const Profile = require('../models/profile');
 //  @route  GET /api/v1/profiles/
 //  @access Private
 module.exports.getMe = async (req, res, next) => {
-    const profile = await Profile.findOne({ _userId: userId });
+    const profile = await Profile.findOne({ _userId: req.user._id });
 
     res.status(200).json({
         success: true,

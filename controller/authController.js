@@ -25,23 +25,9 @@ module.exports.signUp = async (req, res, next) => {
     });
 
     fawn.init(mongoose);
-    // new Fawn.Task()
-    //     .save('users', user)
-    //     .save('profiles', {
-    //         firstName: body.firstName,
-    //         lastName: body.lastName,
-    //         _userId: { $ojFuture: '0._id' },
-    //     })
-    //     .run({ useMongoose: true })
-    //     .then((results) => {
-    //         user = new User(results[0]);
-    //         sendTokenResponse(user, res);
-    //     })
-    //     .catch((err) => next(err));
-
     const results = await new Fawn.Task()
-        .save('users', user)
-        .save('profiles', {
+        .save(User, user)
+        .save(Profile, {
             firstName: body.firstName,
             lastName: body.lastName,
             _userId: { $ojFuture: '0._id' },

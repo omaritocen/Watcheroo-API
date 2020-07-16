@@ -17,16 +17,16 @@ module.exports = (app) => {
         app.use(morgan('dev'));
     }
 
-    process.on('uncaughtException', (ex) => {
-        logger.error(ex.message, ex);
-        //throw ex;
-        process.exit(1);
-    });
+    // process.on('uncaughtException', (ex) => {
+    //     console.log(ex.message, ex);
+    //     //throw ex;
+    //     process.exit(1);
+    // });
 
-    process.on('unhandledRejection', (ex) => {
-        logger.error(ex.message, ex);
-        //throw ex;
-        process.exit(1);
-    });
+    // process.on('unhandledRejection', (ex) => {
+    //     console.log(ex.message, ex);
+    //     //throw ex;
+    //     process.exit(1);
+    // });
 
 };
