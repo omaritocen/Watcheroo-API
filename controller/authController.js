@@ -1,6 +1,11 @@
 const _ = require('lodash');
 const User = require('../models/user');
 const AppError = require('../utils/AppError');
+const Profile = require('../models/profile');
+
+const mongoose = require('mongoose');
+const fawn = require('fawn');
+const Fawn = require('fawn/lib/fawn');
 
 //  @desc   Registers a new user into the server
 //  @route  POST /api/v1/auth/signup
@@ -14,7 +19,35 @@ module.exports.signUp = async (req, res, next) => {
         'lastName',
     ]);
 
-    const user = await User.create(body);
+    let user = new User({
+        email: body.email,
+        password: body.password,
+    });
+
+    fawn.init(mongoose);
+    // new Fawn.Task()
+    //     .save('users', user)
+    //     .save('profiles', {
+    //         firstName: body.firstName,
+    //         lastName: body.lastName,
+    //         _userId: { $ojFuture: '0._id' },
+    //     })
+    //     .run({ useMongoose: true })
+    //     .then((results) => {
+    //         user = new User(results[0]);
+    //         sendTokenResponse(user, res);
+    //     })
+    //     .catch((err) => next(err));
+
+    const results = await new Fawn.Task()
+        .save('users', user)
+        .save('profiles', {
+            firstName: body.firstName,
+            lastName: body.lastName,
+            _userId: { $ojFuture: '0._id' },
+        })
+        .run({ useMongoose: true });
+    user = new User(results[0]);
     sendTokenResponse(user, res);
 };
 

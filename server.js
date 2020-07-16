@@ -11,6 +11,10 @@ require('./startup/routes')(app);
 
 const port = process.env.PORT || 5000;
 
-app.listen(port, () => {
+const server = app.listen(port, () => {
   logger.info(`Server is running on port ${port}`.yellow.bold);
 });
+
+// Configuring SOCKET.IO
+require('./startup/socketio').init(server);
+require('./socketioEvents/events');

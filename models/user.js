@@ -2,19 +2,9 @@ const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 
+const Profile = require('./profile');
+
 const userSchema = new mongoose.Schema({
-    firstName: {
-        type: String,
-        maxlength: 15,
-        trim: true,
-        required: [true, 'Please enter the user first name'],
-    },
-    lastName: {
-        type: String,
-        maxlength: 15,
-        trim: true,
-        required: [true, 'Please enter the user last name'],
-    },
     email: {
         type: String,
         maxlength: 320,
@@ -40,7 +30,6 @@ const userSchema = new mongoose.Schema({
     },
 });
 
-
 // Generates JsonWebToken for the user to use in protected routes
 userSchema.methods.generateAuthToken = function () {
     const token = jwt.sign(
@@ -53,15 +42,19 @@ userSchema.methods.generateAuthToken = function () {
 };
 
 // Makes sure entered password matches hash in the database
-userSchema.methods.verifyPassword = async function(password) {
+userSchema.methods.verifyPassword = async function (password) {
     return await bcrypt.compare(password, this.password);
-}
+};
 
 // Hashes the password before saving it into the database
 userSchema.pre('save', async function (next) {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(this.password, salt);
     this.password = hashedPassword;
+
+    await Profile.create({
+        firstName
+    })
     next();
 });
 

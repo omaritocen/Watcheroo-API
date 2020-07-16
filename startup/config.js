@@ -2,6 +2,7 @@ const express = require('express');
 const dotenv = require('dotenv');
 const morgan = require('morgan');
 const colors = require('colors');
+const logger = require('../logger/logger');
 require('express-async-errors');
 
 // Loading environment variables
@@ -15,4 +16,17 @@ module.exports = (app) => {
     if (process.env.NODE_ENV == 'development') {
         app.use(morgan('dev'));
     }
+
+    process.on('uncaughtException', (ex) => {
+        logger.error(ex.message, ex);
+        //throw ex;
+        process.exit(1);
+    });
+
+    process.on('unhandledRejection', (ex) => {
+        logger.error(ex.message, ex);
+        //throw ex;
+        process.exit(1);
+    });
+
 };
