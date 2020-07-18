@@ -17,7 +17,7 @@ const generateUsername =  async (firstName, lastName) => {
     }
 
     // TODO: MAKE SURE ITS UNIQUE
-    //const profile = await Profile.findOne({username: username});
+    //const profile = await Profile.findOne({username});
     //if (profile) generateUsername(firstName, lastName, maxLength);
     return username;
 }

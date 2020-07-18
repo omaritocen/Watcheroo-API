@@ -3,14 +3,12 @@ const User = require('../models/user');
 const AppError = require('../utils/AppError');
 const Profile = require('../models/profile');
 
-const mongoose = require('mongoose');
-const fawn = require('fawn');
 const Fawn = require('fawn/lib/fawn');
 
 //  @desc   Registers a new user into the server
 //  @route  POST /api/v1/auth/signup
 //  @access Public
-//  @param  Email Password FirstName LastName
+//  @body   Email Password FirstName LastName
 module.exports.signUp = async (req, res, next) => {
     const body = _.pick(req.body, [
         'email',
@@ -24,7 +22,6 @@ module.exports.signUp = async (req, res, next) => {
         password: body.password,
     });
 
-    fawn.init(mongoose);
     const results = await new Fawn.Task()
         .save(User, user)
         .save(Profile, {
@@ -40,7 +37,7 @@ module.exports.signUp = async (req, res, next) => {
 //  @desc   Logins a new user into the server and returns him an access token
 //  @route  POST /api/v1/auth/login
 //  @access Public
-//  @param  Email Password
+//  @body   Email Password
 module.exports.login = async (req, res, next) => {
     const user = await User.findOne({ email: req.body.email }).select(
         '+password'

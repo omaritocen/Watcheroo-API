@@ -1,3 +1,5 @@
+
+// A Custom error message that includes message and status code
 class AppError extends Error {
     constructor(message, statusCode) {
         super(message);
