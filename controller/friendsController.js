@@ -3,7 +3,6 @@ const Fawn = require('fawn/lib/fawn');
 
 const Profile = require('../models/profile');
 const AppError = require('../utils/AppError');
-const { profile } = require('winston');
 
 //  @desc   Gets the friends of a user by profile id
 //  @route  GET /api/v1/profiles/:profileId/friends
@@ -33,6 +32,7 @@ module.exports.getAllFriendsByProfileId = async (req, res, next) => {
 
     res.status(200).json({
         success: true,
+        count: profile.friends.length,
         data: profile.friends,
     });
 };

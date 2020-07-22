@@ -1,4 +1,5 @@
 const AppError = require('../utils/AppError');
+const logger = require('../logger/logger');
 
 module.exports = (err, req, res, next) => {
     let error = { ...err };
@@ -11,9 +12,14 @@ module.exports = (err, req, res, next) => {
     }
 
     const statusCode = error.statusCode ? error.statusCode : 500;
-    const errorResponse = error.errorsObject
+    let errorResponse = error.errorsObject
         ? error.errorsObject
         : error.message;
+
+    if (statusCode == 500) {
+        logger.error(err.message);
+        errorResponse = 'Internal Server Error';
+    }
 
     res.status(statusCode).json({
         success: false,

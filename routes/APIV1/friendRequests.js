@@ -5,10 +5,9 @@ const router = express.Router({ mergeParams: true });
 const {
     addFriendRequest,
     changeRequestStatus,
-    deleteFriend,
 } = require('../../controller/friendsController');
 
-router.route('/').post(addFriendRequest).delete(deleteFriend);
+router.route('/').post(addFriendRequest);
 
 router.post('/:changeRequest', changeRequestStatus);
 

@@ -18,3 +18,4 @@ const server = app.listen(port, () => {
 // Configuring SOCKET.IO
 require('./startup/socketio').init(server);
 require('./socketioEvents/events');
+require('./socketioEvents/watch');

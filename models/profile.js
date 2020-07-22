@@ -38,11 +38,11 @@ const profileSchema = new mongoose.Schema({
         default: 'no-photo.png',
     },
 
-    requests: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Profile', }],
+    requests: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Profile'}],
 
     sentRequests: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Profile' }],
-    
-    friends: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Profile' }],
+
+    friends: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Profile'}],
 });
 
 // Creates a random username before inserting into database

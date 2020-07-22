@@ -3,6 +3,7 @@ const router = express.Router();
 
 const {
     getMe,
+    getAllProfiles,
     updateProfile,
     getProfile,
     getProfileByUsername,
@@ -13,6 +14,7 @@ const validateObjectId = require('../../middleware/validations/validateObjectId'
 const auth = require('../../middleware/auth');
 const friends = require('./friends');
 const friendRequests = require('./friendRequests');
+const { route } = require('./friends');
 
 router.use(auth);
 
@@ -22,7 +24,9 @@ router.param('profileId', validateObjectId);
 router.use('/:profileId/friends', friends);
 router.use('/:profileId/friend-request', friendRequests);
 
-router.route('/').get(getMe).put(validBody('updateProfile'), updateProfile);
+router.route('/').get(getAllProfiles);
+
+router.route('/me').get(getMe).put(validBody('updateProfile'), updateProfile);
 
 router.get('/:profileId', getProfile);
 
