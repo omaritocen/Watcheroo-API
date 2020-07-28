@@ -21,7 +21,7 @@ module.exports.getAllProfiles = async (req, res, next) => {
             .sort()
             .paginate()
     ).getResults();
-    
+
     res.status(200).json({
         success: true,
         results,

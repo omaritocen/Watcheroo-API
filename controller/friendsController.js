@@ -72,6 +72,12 @@ module.exports.addFriendRequest = async (req, res, next) => {
         );
     }
 
+    if (targetProfile.sentRequests.includes(currentUserProfile._id)) {
+        return next(
+            new AppError(`This user has already sent you a friend request, You should accept it`, 400)
+        );
+    }
+
     const results = await new Fawn.Task()
         .update(
             Profile,

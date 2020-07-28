@@ -15,12 +15,16 @@ module.exports.signUp = async (req, res, next) => {
         'password',
         'firstName',
         'lastName',
+        'fcmToken',
     ]);
 
     let user = new User({
         email: body.email,
         password: body.password,
+        fcmToken: body.fcmToken,
     });
+
+    // TODO: VALIDATE FCM TOKEN
 
     const results = await new Fawn.Task()
         .save(User, user)
@@ -51,7 +55,25 @@ module.exports.login = async (req, res, next) => {
         return next(new AppError('Invalid Credntials', 400));
     }
 
+    await User.findByIdAndUpdate(user._id, { fcmToken: req.body.fcmToken });
+
     sendTokenResponse(user, res);
+};
+
+//  @desc   Deletes FCM token from server
+//  @route  POST /api/v1/auth/logout
+//  @access Private
+module.exports.logout = async (req, res, next) => {
+
+    await User.findByIdAndUpdate(
+        req.user._id,
+        { fcmToken: null }
+    );
+
+    res.status(200).json({
+        success: true,
+        data: 'Deleted registeration token successfully',
+    });
 };
 
 //  @desc   gets the data of the current logged in user

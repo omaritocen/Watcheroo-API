@@ -13,20 +13,29 @@ const partySchema = new mongoose.Schema({
         required: true,
     },
 
+    movieName: {
+        type: String,
+        minLength: 1,
+        required: true,
+    },
+
     isCreatorReady: {
         type: Boolean,
+        default: false,
         required: true,
     },
 
     isGuestReady: {
         type: Boolean,
+        default: false,
         required: true,
     },
 
     createdAt: {
         type: Date,
         required: true,
-    }
+        default: Date.now(),
+    },
 });
 
 const Party = mongoose.model('Party', partySchema);

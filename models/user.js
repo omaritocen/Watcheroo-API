@@ -26,6 +26,12 @@ const userSchema = new mongoose.Schema({
         enum: ['watcher', 'admin'],
         default: 'watcher',
     },
+    
+    fcmToken: {
+        type: String,
+        required: true,
+        select: false,
+    },
 });
 
 // Generates JsonWebToken for the user to use in protected routes

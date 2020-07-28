@@ -7,5 +7,6 @@ module.exports = () => {
         body('password').exists().isLength({ min: 6 }),
         body('firstName').exists(),
         body('lastName').exists(),
+        body('fcmToken').exists(),
     ];
 };

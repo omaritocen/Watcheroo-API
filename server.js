@@ -7,7 +7,6 @@ const app = express();
 
 require('./startup/config')(app);
 require('./startup/db');
-require('./startup/routes')(app);
 
 const port = process.env.PORT || 5000;
 
@@ -15,7 +14,6 @@ const server = app.listen(port, () => {
   logger.info(`Server is running on port ${port}`.yellow.bold);
 });
 
-// Configuring SOCKET.IO
+// CONT: Loading essential configuaration for the API
 require('./startup/socketio').init(server);
-require('./socketioEvents/events');
-require('./socketioEvents/watch');
+require('./startup/routes')(app);
