@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 const AppError = require('../utils/AppError');
 const User = require('../models/user');
+const Profile = require('../models/profile');
 
 // Authorize user with access tokens
 module.exports = async (req, res, next) => {

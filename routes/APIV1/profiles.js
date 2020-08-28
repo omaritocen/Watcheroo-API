@@ -7,6 +7,7 @@ const {
     updateProfile,
     getProfile,
     getProfileByUsername,
+    uploadProfilePicture,
 } = require('../../controller/profileController');
 
 const validBody = require('../../middleware/validBody');
@@ -26,6 +27,7 @@ router.use('/:profileId/friend-request', friendRequests);
 
 router.route('/').get(getAllProfiles);
 
+router.route('/me/photo').put(uploadProfilePicture);
 router.route('/me').get(getMe).put(validBody('updateProfile'), updateProfile);
 
 router.get('/:profileId', getProfile);

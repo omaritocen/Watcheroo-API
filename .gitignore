@@ -1,5 +1,5 @@
 node_modules/
-config/config.env
+config/
 logger/combined.log
 logger/error.log
 logger/exceptions.log

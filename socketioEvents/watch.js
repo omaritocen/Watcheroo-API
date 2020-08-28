@@ -5,6 +5,7 @@ const io = require('../startup/socketio').getIO();
 
 const watch = io.of('/watch');
 
+// TODO: TO BE MOVED TO A DATABASE IF BIG
 let rooms = {};
 
 const addConnection = (roomId, profileId) => {
@@ -60,17 +61,24 @@ watch.on('connection', (socket) => {
     addConnection(roomId, profileId);
 
     socket.join(roomId, () => {
-        // let rooms = Object.keys(socket.rooms);
-        // logger.info(`New Client Connected on watch: Room: ${rooms}`);
         logger.info(
             `Total connected friends in room is ${rooms[roomId].connectedFriends.length}`
         );
+
+        const totalReady = rooms[roomId].readyFriends.length;
+        socket.to(roomId).emit('updateReady', totalReady);
+        logger.info(`updated the total ready to ${totalReady}`);
+
     });
 
     socket.on('ready', () => {
         const allReady = readyUser(roomId, profileId);
         if (allReady) {
-            socket.to(roomId).emit('start');
+            watch.to(roomId).emit('startParty');
+            logger.info('party started')
+        } else {
+            socket.to(roomId).emit('updateReady', rooms[roomId].readyFriends.length);
+            logger.info(`Updating ready ${rooms[roomId].readyFriends.length}`);
         }
     });
 
@@ -84,6 +92,6 @@ watch.on('disconnection', () => {
     logger.info('socketIO disconnected');
 });
 
-watch.on('ready', (data) => {});
+//watch.on('ready', (data) => {});
 
 //watch.on('newWatchParty', (data) => {});

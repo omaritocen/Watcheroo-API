@@ -19,18 +19,12 @@ const partySchema = new mongoose.Schema({
         required: true,
     },
 
-    isCreatorReady: {
-        type: Boolean,
-        default: false,
+    status: {
+        type: String,
+        enum: ['waiting', 'done'],
         required: true,
     },
-
-    isGuestReady: {
-        type: Boolean,
-        default: false,
-        required: true,
-    },
-
+    
     createdAt: {
         type: Date,
         required: true,
