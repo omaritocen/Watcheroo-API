@@ -1,11 +1,13 @@
 const _ = require('lodash');
 
-const Party = require('../models/party');
 const Profile = require('../models/profile');
 const User = require('../models/user');
+const Party = require('../models/party');
 
 const AppError = require('../utils/AppError');
 const notification = require('../utils/notification');
+
+const AdvancedResults = require('../utils/AdvancedResults');
 
 //  @desc   Gets a single party that a user is enrolled in
 //  @route  GET /api/v1/parties/:id
@@ -59,6 +61,7 @@ module.exports.createParty = async (req, res, next) => {
     }
 
     reqBody._creator = profile._id;
+    reqBody.status = 'waiting';
 
     const party = await Party.create(reqBody);
 
@@ -92,27 +95,71 @@ module.exports.createParty = async (req, res, next) => {
     });
 };
 
-//  @desc   Gets done parties which user was enrolled in
-//  @route  GET /api/v1/parties/
+//  @desc   Updates party data
+//  @route  PUT /api/v1/parties/:id
 //  @access Private
-module.exports.getPrevParties = async (req, res, next) => {
+module.exports.updateParty = async (req, res, next) => {
+    const partyId = req.params.partyId;
+    let party = await Party.findById(partyId);
+
+    if (!party) {
+        return next(
+            new AppError(`No Party with the id ${partyId} is found`, 404)
+        );
+    }
+
     const userId = req.user._id;
     const profile = await Profile.findOne({ _userId: userId });
 
-    const parties = await Party.find({
-        $and: [
-            { $or: [{ _creator: profile._id }, { _guest: profile._id }] },
-            { status: 'done' },
-        ],
-    });
+    if (party._guest.toString() !== profile._id.toString()) {
+        return next(
+            new AppError(
+                `You must be the creator or the guest of the party`,
+                403
+            )
+        );
+    }
 
-    if (!parties) {
-        return res.status(200).send({success: true,count:0, data: []});
+    const body = _.pick(req.body, ['status']);
+    party = await Party.findByIdAndUpdate(partyId, body, {
+        new: true,
+        runValidators: true,
+    });
+    res.status(200).json({
+        success: true,
+        data: party,
+    });
+};
+
+//  @desc   Gets parties which user was enrolled in
+//  @route  GET /api/v1/parties/
+//  @access Private
+module.exports.getParties = async (req, res, next) => {
+    const userId = req.user._id;
+    const profile = await Profile.findOne({ _userId: userId });
+
+    const advancedResult = new AdvancedResults(
+        Party,
+        Party.find({
+            $and: [
+                { $or: [{ _creator: profile._id }, { _guest: profile._id }] },
+            ],
+        }),
+        req.query
+    );
+
+    let results = await (
+        await advancedResult
+            .filter()
+    ).getResults();
+
+    if (!results) {
+        return res.status(200).send({ success: true, count: 0, data: [] });
     }
 
     res.status(200).send({
         success: true,
-        count: parties.length,
-        data: parties
+        count: results.count,
+        data: results.data,
     });
 };

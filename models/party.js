@@ -21,7 +21,7 @@ const partySchema = new mongoose.Schema({
 
     status: {
         type: String,
-        enum: ['waiting', 'done'],
+        enum: ['waiting', 'accepted', 'declined'],
         required: true,
     },
     

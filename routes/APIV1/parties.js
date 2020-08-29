@@ -4,7 +4,8 @@ const router = express.Router();
 const {
     createParty,
     getParty,
-    getPrevParties,
+    updateParty,
+    getParties
 } = require('../../controller/partyController');
 
 const auth = require('../../middleware/auth');
@@ -15,11 +16,11 @@ router.use(auth);
 
 router.param('partyId', validateObjectId);
 
-router.get('/:partyId', getParty);
+router.route('/:partyId').get(getParty).put(updateParty);
 
 router
     .route('/')
     .post(validBody('createParty'), createParty)
-    .get(getPrevParties);
+    .get(getParties);
 
 module.exports = router;
